@@ -1,0 +1,952 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header & Actions -->
+    <div class="mb-6 md:flex md:items-center md:justify-between">
+        <div class="flex-1 min-w-0">
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Dashboard Financiero</h2>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4 space-x-3">
+            <a href="{{ url_for('setup') }}"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Configurar Sheet
+            </a>
+            <a href="{{ url_for('dashboard') }}"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refrescar
+            </a>
+        </div>
+    </div>
+
+    <!-- Connection Toast (Auto-hide logic in scripts) -->
+    <div id="connectionToast" class="fixed top-20 right-5 z-50 transition-opacity duration-500" style="display: none;">
+        <div
+            class="rounded-md p-4 shadow-lg {% if sheet_status == 'success' %}bg-green-50 border border-green-200{% else %}bg-yellow-50 border border-yellow-200{% endif %}">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    {% if sheet_status == 'success' %}
+                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    {% else %}
+                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    {% endif %}
+                </div>
+                <div class="ml-3">
+                    <p
+                        class="text-sm font-medium {% if sheet_status == 'success' %}text-green-800{% else %}text-yellow-800{% endif %}">
+                        {% if sheet_status == 'success' %}Conectado{% else %}Problema de Conexión{% endif %}
+                    </p>
+                </div>
+                <div class="ml-auto pl-3">
+                    <div class="-mx-1.5 -my-1.5">
+                        <button type="button" onclick="document.getElementById('connectionToast').style.display='none'"
+                            class="inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 {% if sheet_status == 'success' %}bg-green-50 text-green-500 hover:bg-green-100 focus:ring-green-600{% else %}bg-yellow-50 text-yellow-500 hover:bg-yellow-100 focus:ring-yellow-600{% endif %}">
+                            <span class="sr-only">Dismiss</span>
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Metrics Cards (Side by Side) -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-2">
+        <!-- PEN Metrics -->
+        <div class="bg-white overflow-hidden shadow rounded-lg p-2">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase">Ingresos</dt>
+                    <dd class="mt-1 text-xl font-semibold text-green-600">S/ {{
+                        "{:,.2f}".format(totals['PEN']['income']) }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase">Egresos</dt>
+                    <dd class="mt-1 text-xl font-semibold text-red-600">S/ {{ "{:,.2f}".format(totals['PEN']['expense'])
+                        }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase">Balance</dt>
+                    <dd
+                        class="mt-1 text-xl font-semibold {% if totals['PEN']['balance'] >= 0 %}text-indigo-600{% else %}text-red-600{% endif %}">
+                        S/ {{ "{:,.2f}".format(totals['PEN']['balance']) }}
+                    </dd>
+                </div>
+            </div>
+        </div>
+
+        <!-- USD Metrics -->
+        <div class="bg-white overflow-hidden shadow rounded-lg p-2">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase">Ingresos</dt>
+                    <dd class="mt-1 text-xl font-semibold text-green-600">$ {{ "{:,.2f}".format(totals['USD']['income'])
+                        }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase">Egresos</dt>
+                    <dd class="mt-1 text-xl font-semibold text-red-600">$ {{ "{:,.2f}".format(totals['USD']['expense'])
+                        }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase">Balance</dt>
+                    <dd
+                        class="mt-1 text-xl font-semibold {% if totals['USD']['balance'] >= 0 %}text-indigo-600{% else %}text-red-600{% endif %}">
+                        $ {{ "{:,.2f}".format(totals['USD']['balance']) }}
+                    </dd>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-2">
+        <!-- New Transaction Form (unchanged, just placeholder for context) -->
+        <!-- ... form ... -->
+
+        <!-- Charts Section (Replaced) -->
+        <!-- New Transaction Form is maintained by surrounding context, only modifying Charts Section part usually but here I am creating a new structure -->
+        <!-- Actually, I need to be careful with layout. The user wants graphs separated. -->
+        <!-- I will put graphs in the right column (lg:col-span-2) but stacked -->
+
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <!-- New Transaction Form -->
+        <div class="bg-white shadow sm:rounded-lg lg:col-span-1 border-t-4 border-indigo-500">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-bold text-gray-900 mb-4">Nueva Operación</h3>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                <div class="mb-4">
+                    {% for category, message in messages %}
+                    <div
+                        class="p-2 text-sm rounded-md {% if category == 'success' %}bg-green-50 text-green-700{% else %}bg-red-50 text-red-700{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                {% if sheet_status == 'success' %}
+                <form action="{{ url_for('add_transaction') }}" method="POST" class="space-y-4" id="transactionForm">
+
+                    <!-- Tipo Selection (Visual Toggle) -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Operación</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="tipo" value="ingreso" class="peer sr-only">
+                                <div
+                                    class="rounded-md border border-gray-200 py-2 text-center text-sm font-semibold text-gray-600 hover:bg-gray-50 peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:text-green-700 transition-all">
+                                    Ingreso (+)
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="tipo" value="egreso" class="peer sr-only" checked>
+                                <div
+                                    class="rounded-md border border-gray-200 py-2 text-center text-sm font-semibold text-gray-600 hover:bg-gray-50 peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 transition-all">
+                                    Egreso (-)
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <label for="monto" class="block text-sm font-medium text-gray-700">Monto</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="number" step="0.01" name="monto" id="monto" required
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-gray-300 rounded-md py-2 border"
+                                    placeholder="0.00">
+                                <div class="absolute inset-y-0 right-0 flex items-center">
+                                    <label for="moneda" class="sr-only">Moneda</label>
+                                    <select id="moneda" name="moneda"
+                                        class="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
+                                        <option value="USD">USD</option>
+                                        <option value="PEN">PEN</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-2">
+                            <label for="fecha_ingreso" class="block text-sm font-medium text-gray-700">Fecha</label>
+                            <input type="date" name="fecha_ingreso" id="fecha_ingreso" required
+                                class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+
+                        <div class="col-span-2">
+                            <label for="empresa" class="block text-sm font-medium text-gray-700">Empresa /
+                                Cliente</label>
+                            <input type="text" name="empresa" id="empresa" required
+                                class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+
+                        <div class="col-span-2">
+                            <label for="concepto_pago" class="block text-sm font-medium text-gray-700">Concepto</label>
+                            <input type="text" name="concepto_pago" id="concepto_pago" required
+                                class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+
+                        <div class="col-span-2">
+                            <label for="nro_operacion" class="block text-sm font-medium text-gray-700">Nro. Operación
+                                (Opcional)</label>
+                            <input type="text" name="nro_operacion" id="nro_operacion"
+                                class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+
+                        <div class="col-span-2">
+                            <label for="detalle" class="block text-sm font-medium text-gray-700">Detalle
+                                (Opcional)</label>
+                            <textarea id="detalle" name="detalle" rows="2"
+                                class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                            Registrar Operación
+                        </button>
+                    </div>
+                </form>
+                {% else %}
+                <div class="text-center py-10 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Formulario Deshabilitado</h3>
+                    <p class="mt-1 text-sm text-gray-500">Conecta una hoja de cálculo válida para registrar operaciones.
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Tabs Navigation -->
+            <div class="flex space-x-1 rounded-xl bg-gray-100 p-1">
+                <button id="tabBtnCharts"
+                    class="w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-700 bg-white shadow ring-1 ring-black ring-opacity-5 transition-all duration-200">
+                    📊 Gráficos
+                </button>
+                <button id="tabBtnHistory"
+                    class="w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-500 hover:text-indigo-600 transition-all duration-200">
+                    📝 Historial
+                </button>
+            </div>
+
+            <!-- Tab Content: Charts -->
+            <div id="tabContentCharts" class="space-y-6">
+                <!-- Chart Filters -->
+                <div class="bg-white shadow sm:rounded-lg p-4 flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-gray-900">Gráficos de Balance</h3>
+                    <div class="flex items-center space-x-2">
+                        <label for="chartFilterMonth" class="text-sm text-gray-600">Filtrar Mes:</label>
+                        <input type="month" id="chartFilterMonth"
+                            class="text-sm border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-1 border">
+                        <button id="clearChartFilter"
+                            class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Ver
+                            Todo</button>
+                    </div>
+                </div>
+
+                <div class="bg-white shadow sm:rounded-lg p-6 relative">
+                    <h3 class="text-sm font-medium text-gray-500 mb-1 uppercase tracking-wide">Soles (PEN)</h3>
+                    <div class="relative h-64">
+                        <canvas id="chartPEN"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white shadow sm:rounded-lg p-6 relative">
+                    <h3 class="text-sm font-medium text-gray-500 mb-1 uppercase tracking-wide">Dólares (USD)</h3>
+                    <div class="relative h-64">
+                        <canvas id="chartUSD"></canvas>
+                    </div>
+                </div>
+            </div> <!-- End Tab Content: Charts -->
+
+            <!-- Tab Content: History -->
+            <div id="tabContentHistory" class="hidden">
+
+                <div class="bg-white shadow-lg sm:rounded-xl overflow-hidden border border-gray-100">
+                    <!-- Header & Profit -->
+                    <div class="px-6 py-5 border-b border-gray-100 bg-white">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900">Historial de Transacciones</h3>
+                                <p class="text-sm text-gray-500 mt-1">Gestión y monitoreo de operaciones</p>
+                            </div>
+
+                            <!-- Premium Profit Card -->
+                            <div
+                                class="bg-gradient-to-r from-indigo-50 to-blue-50 px-6 py-3 rounded-xl border border-indigo-100 flex items-center shadow-sm">
+                                <div class="mr-4">
+                                    <span
+                                        class="block text-xs font-semibold text-indigo-400 uppercase tracking-wider">PROFIT
+                                        (Filtrado)</span>
+                                    <div id="mainProfitDisplay" class="text-2xl font-extrabold text-indigo-700">S/ 0.00
+                                    </div>
+                                </div>
+                                <div class="p-2 bg-white rounded-lg shadow-sm">
+                                    <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filters Bar -->
+                        <div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-3">
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </span>
+                                <input type="text" id="filterEmpresa" placeholder="Buscar Empresa..."
+                                    class="pl-10 block w-full border-gray-200 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 transition-colors">
+                            </div>
+
+                            <select id="filterHL"
+                                class="block w-full border-gray-200 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 transition-colors">
+                                <option value="all">📁 Filtro HL (Todos)</option>
+                                <!-- Populated by JS -->
+                            </select>
+
+                            <select id="filterTipo"
+                                class="block w-full border-gray-200 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 transition-colors">
+                                <option value="all">⇄ Todos los Tipos</option>
+                                <option value="ingreso">↓ Ingresos</option>
+                                <option value="egreso">↑ Egresos</option>
+                            </select>
+
+                            <input type="month" id="filterMes"
+                                class="block w-full border-gray-200 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 transition-colors">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50 sticky top-0 z-10 shadow-sm">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Fecha</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Concepto</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Rows will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- End Tab Content: History -->
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script>
+    // Data from Backend
+    const rawTransactions = {{ transactions | tojson }};
+    const chartDataPEN = {{ chart_pen | tojson }};
+    const chartDataUSD = {{ chart_usd | tojson }};
+
+    // Ensure we handle the data correctly
+    const allTransactions = rawTransactions.map(t => {
+        let montoVal = t._parsed_monto;
+        if (montoVal === undefined) {
+            let montoStr = String(t.MONTO || "0").replace(/,/g, '');
+            montoVal = parseFloat(montoStr);
+        }
+
+        let dateStr = t._parsed_date;
+        if (!dateStr) {
+            dateStr = String(t.FECHA_INGRESO || "").substring(0, 10);
+        }
+
+        return {
+            ...t,
+            _montoVal: montoVal,
+            _dateStr: dateStr, // YYYY-MM-DD
+            _tipo: montoVal >= 0 ? 'ingreso' : 'egreso'
+        };
+    }).reverse();
+
+    // Charts Instances (Global to update them)
+    let chartInstancePEN = null;
+    let chartInstanceUSD = null;
+
+    // Helper to create charts
+    function createBalanceChart(canvasId, labels, incomeData, expenseData) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return null;
+
+        const ctx = canvas.getContext('2d');
+
+        // Register the plugin to all charts:
+        Chart.register(ChartDataLabels);
+
+        return new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Ingresos',
+                        data: incomeData,
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)', // green-500 light
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2,
+                        borderRadius: 4,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8
+                    },
+                    {
+                        label: 'Egresos',
+                        data: expenseData,
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)', // red-500 light
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 2,
+                        borderRadius: 4,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        top: 25 // Extra space for labels
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 11
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            padding: 10,
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 11
+                            },
+                            callback: function (value) { return value.toLocaleString(undefined, { minimumFractionDigits: 2 }); }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true, // Keep tooltips for detailed info
+                        backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                        titleFont: { family: "'Inter', sans-serif", size: 13 },
+                        bodyFont: { family: "'Inter', sans-serif", size: 12 },
+                        padding: 10,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function (context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) { label += context.parsed.y.toLocaleString(undefined, { minimumFractionDigits: 2 }); }
+                                return label;
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        color: '#4B5563', // gray-600
+                        anchor: 'end',
+                        align: 'top',
+                        offset: -2,
+                        font: {
+                            weight: 'bold',
+                            size: 10,
+                            family: "'Inter', sans-serif"
+                        },
+                        formatter: function (value, context) {
+                            if (value === 0) return ''; // Hide 0s
+                            // Compact format: 1.2k, 500, etc. or full if small
+                            if (value >= 1000) {
+                                return (value / 1000).toFixed(1) + 'k';
+                            }
+                            return value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function initCharts() {
+        if (chartDataPEN) {
+            chartInstancePEN = createBalanceChart('chartPEN', chartDataPEN.labels, chartDataPEN.income, chartDataPEN.expense);
+        }
+        if (chartDataUSD) {
+            chartInstanceUSD = createBalanceChart('chartUSD', chartDataUSD.labels, chartDataUSD.income, chartDataUSD.expense);
+        }
+    }
+
+    initCharts();
+
+    // --- Chart Filtering Logic ---
+    const chartFilterMonth = document.getElementById('chartFilterMonth');
+    const clearChartFilterBtn = document.getElementById('clearChartFilter');
+
+    function updateChartsByMonth(monthYYYYMM) {
+        // monthYYYYMM format: "2025-01"
+
+        function filterData(originalData, filterKey) {
+            if (!originalData) return { labels: [], income: [], expense: [] };
+
+            const indices = [];
+            originalData.labels.forEach((label, index) => {
+                if (label === filterKey) {
+                    indices.push(index);
+                }
+            });
+
+            if (indices.length === 0) {
+                return { labels: [filterKey], income: [0], expense: [0] };
+            }
+
+            return {
+                labels: indices.map(i => originalData.labels[i]),
+                income: indices.map(i => originalData.income[i]),
+                expense: indices.map(i => originalData.expense[i])
+            };
+        }
+
+        if (chartInstancePEN && chartDataPEN) {
+            const filtered = filterData(chartDataPEN, monthYYYYMM);
+            chartInstancePEN.data.labels = filtered.labels;
+            chartInstancePEN.data.datasets[0].data = filtered.income;
+            chartInstancePEN.data.datasets[1].data = filtered.expense;
+            chartInstancePEN.update();
+        }
+
+        if (chartInstanceUSD && chartDataUSD) {
+            const filtered = filterData(chartDataUSD, monthYYYYMM);
+            chartInstanceUSD.data.labels = filtered.labels;
+            chartInstanceUSD.data.datasets[0].data = filtered.income;
+            chartInstanceUSD.data.datasets[1].data = filtered.expense;
+            chartInstanceUSD.update();
+        }
+    }
+
+    function resetCharts() {
+        if (chartInstancePEN && chartDataPEN) {
+            chartInstancePEN.data.labels = chartDataPEN.labels;
+            chartInstancePEN.data.datasets[0].data = chartDataPEN.income;
+            chartInstancePEN.data.datasets[1].data = chartDataPEN.expense;
+            chartInstancePEN.update();
+        }
+        if (chartInstanceUSD && chartDataUSD) {
+            chartInstanceUSD.data.labels = chartDataUSD.labels;
+            chartInstanceUSD.data.datasets[0].data = chartDataUSD.income;
+            chartInstanceUSD.data.datasets[1].data = chartDataUSD.expense;
+            chartInstanceUSD.update();
+        }
+    }
+
+    if (chartFilterMonth) {
+        chartFilterMonth.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val) {
+                updateChartsByMonth(val);
+            } else {
+                resetCharts();
+            }
+        });
+    }
+
+    if (clearChartFilterBtn) {
+        clearChartFilterBtn.addEventListener('click', () => {
+            if (chartFilterMonth) chartFilterMonth.value = '';
+            resetCharts();
+        });
+    }
+
+
+    // --- HL Extraction Logic ---
+    const filterHL = document.getElementById('filterHL');
+    const uniqueHLCodes = new Set();
+
+    // Regex for HL codes: HL followed by digits (usually 6, e.g., 202501)
+    // User Example: HL202501, HL202604
+    const hlRegex = /HL\d{5,}/i; // At least 5 digits to be safe, typically 6
+
+    allTransactions.forEach(t => {
+        const concepto = t.CONCEPTO_PAGO || '';
+        const match = concepto.match(hlRegex);
+        if (match) {
+            uniqueHLCodes.add(match[0].toUpperCase());
+            // Store the HL code in the transaction object for easier filtering
+            t._hlCode = match[0].toUpperCase();
+        } else {
+            t._hlCode = null;
+        }
+    });
+
+    if (filterHL) {
+        const sortedCodes = Array.from(uniqueHLCodes).sort();
+        sortedCodes.forEach(code => {
+            const option = document.createElement('option');
+            option.value = code;
+            option.textContent = code;
+            filterHL.appendChild(option);
+        });
+    }
+
+    // --- Tab Logic ---
+    const tabBtnCharts = document.getElementById('tabBtnCharts');
+    const tabBtnHistory = document.getElementById('tabBtnHistory');
+    const tabContentCharts = document.getElementById('tabContentCharts');
+    const tabContentHistory = document.getElementById('tabContentHistory');
+
+    if (tabBtnCharts && tabBtnHistory && tabContentCharts && tabContentHistory) {
+        function switchTab(tab) {
+            if (tab === 'charts') {
+                tabContentCharts.classList.remove('hidden');
+                tabContentHistory.classList.add('hidden');
+
+                // Style Active
+                tabBtnCharts.className = "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-700 bg-white shadow ring-1 ring-black ring-opacity-5 transition-all duration-200";
+                // Style Inactive
+                tabBtnHistory.className = "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-500 hover:text-indigo-600 transition-all duration-200";
+
+            } else {
+                tabContentCharts.classList.add('hidden');
+                tabContentHistory.classList.remove('hidden');
+
+                // Style Inactive
+                tabBtnCharts.className = "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-500 hover:text-indigo-600 transition-all duration-200";
+                // Style Active
+                tabBtnHistory.className = "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-indigo-700 bg-white shadow ring-1 ring-black ring-opacity-5 transition-all duration-200";
+            }
+        }
+
+        tabBtnCharts.addEventListener('click', () => switchTab('charts'));
+        tabBtnHistory.addEventListener('click', () => switchTab('history'));
+    }
+
+    // --- Table Filtering Logic ---
+    const tableBody = document.getElementById('transactionTableBody');
+    const filterEmpresa = document.getElementById('filterEmpresa');
+    const filterTipo = document.getElementById('filterTipo');
+    const filterMes = document.getElementById('filterMes');
+
+    // Profit Displays
+    const profitContainer = document.getElementById('profitDisplayContainer');
+    const profitDisplay = document.getElementById('filteredProfitDisplay');
+    const profitContainerMobile = document.getElementById('profitDisplayContainerMobile');
+    const profitDisplayMobile = document.getElementById('filteredProfitDisplayMobile');
+
+    function renderTable(data) {
+        if (!tableBody) return;
+        tableBody.innerHTML = '';
+        if (data.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-sm text-gray-500">No se encontraron transacciones.</td></tr>';
+            return;
+        }
+
+        data.forEach(t => {
+            const tr = document.createElement('tr');
+            const colorClass = t._montoVal >= 0 ? 'text-green-600' : 'text-red-600';
+            const moneda = t.MONEDA || (t._parsed_moneda ? t._parsed_moneda : '');
+            const montoFormatted = t._montoVal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            tr.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    ${t._dateStr}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <div class="font-medium text-gray-900">${t.CONCEPTO_PAGO || '-'}</div>
+                    <div class="text-xs text-gray-500">${t.EMPRESA || '-'}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${colorClass}">
+                    ${montoFormatted} ${moneda}
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    function applyFilters() {
+        const empresaTerm = filterEmpresa ? filterEmpresa.value.toLowerCase() : '';
+        const tipoVal = filterTipo ? filterTipo.value : 'all';
+        const mesVal = filterMes ? filterMes.value : ''; // YYYY-MM
+        const hlVal = filterHL ? filterHL.value : 'all';
+
+        const filtered = allTransactions.filter(t => {
+            // Empresa Filter
+            const empresaMatch = (t.EMPRESA || '').toLowerCase().includes(empresaTerm) ||
+                (t.CONCEPTO_PAGO || '').toLowerCase().includes(empresaTerm);
+
+            // Tipo Filter
+            let tipoMatch = true;
+            if (tipoVal !== 'all') {
+                tipoMatch = t._tipo === tipoVal;
+            }
+
+            // Mes Filter
+            let mesMatch = true;
+            if (mesVal) {
+                mesMatch = t._dateStr.startsWith(mesVal);
+            }
+
+            // HL Filter
+            let hlMatch = true;
+            if (hlVal !== 'all') {
+                // Determine if we should match extracted code or text search
+                // Use strict matching on extracted code if available
+                hlMatch = t._hlCode === hlVal;
+            }
+
+            return empresaMatch && tipoMatch && mesMatch && hlMatch;
+        });
+
+        // Calculate Profit for Filtered Data
+        // IMPORTANT: Summing mixed currencies is wrong visually if we don't separate them. 
+        // For simplicity and assuming user usually filters by project which might be in one currency or they accept distinct currency totals.
+        // User request: "Profit" -> implied unified or primary. 
+        // I will sum them up by currency.
+
+        let totalPEN = 0;
+        let totalUSD = 0;
+
+        filtered.forEach(t => {
+            const moneda = (t.MONEDA || t._parsed_moneda || 'USD').toUpperCase();
+            if (moneda.includes('PEN') || moneda.includes('SOLES')) {
+                totalPEN += t._montoVal;
+            } else {
+                totalUSD += t._montoVal;
+            }
+        });
+
+        // Update Display
+        let profitText = '';
+        if (totalPEN !== 0) profitText += `S/ ${totalPEN.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `;
+        if (totalUSD !== 0) profitText += ` $ ${totalUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        if (profitText === '') profitText = 'S/ 0.00';
+
+        const mainProfit = document.getElementById('mainProfitDisplay');
+        if (mainProfit) {
+            mainProfit.textContent = profitText;
+        }
+
+        renderTable(filtered);
+    }
+
+    // Event Listeners
+    if (filterEmpresa) filterEmpresa.addEventListener('input', applyFilters);
+    if (filterTipo) filterTipo.addEventListener('change', applyFilters);
+    if (filterMes) filterMes.addEventListener('change', applyFilters);
+    if (filterHL) filterHL.addEventListener('change', applyFilters);
+
+    // Initial Render
+    renderTable(allTransactions);
+    // Calc initial profit (all)
+    applyFilters();
+
+    // --- Toast Logic ---
+    const toast = document.getElementById('connectionToast');
+    if (toast) {
+        toast.style.display = 'block';
+        const isSuccess = toast.querySelector('.bg-green-50') !== null;
+        if (isSuccess) {
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 500);
+            }, 5000);
+        }
+    }
+
+    // --- Form Logic for Strict Sign Enforcement & Optimistic UI ---
+    const form = document.getElementById('transactionForm');
+    if (form) {
+        // Set default date
+        // Set default date (America/Lima)
+        const fechaInput = document.getElementById('fecha_ingreso');
+        if (fechaInput) {
+            const peruDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Lima' });
+            fechaInput.value = peruDate;
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Guardando...';
+
+            // Gather Data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            data.monto = parseFloat(data.monto);
+
+            // Strict Sign Logic
+            if (data.tipo === 'egreso') {
+                data.monto = -Math.abs(data.monto);
+            } else {
+                data.monto = Math.abs(data.monto);
+            }
+
+            // Create Optimistic Transaction
+            const newTx = {
+                ...data,
+                MONEDA: data.moneda,
+                MONTO: data.monto,
+                CONCEPTO_PAGO: data.concepto_pago,
+                EMPRESA: data.empresa,
+                FECHA_INGRESO: data.fecha_ingreso,
+                _montoVal: data.monto,
+                _dateStr: data.fecha_ingreso,
+                _tipo: data.tipo
+            };
+
+            // HL Logic extraction
+            const match = (newTx.CONCEPTO_PAGO || '').match(/HL\d{5,}/i);
+            newTx._hlCode = match ? match[0].toUpperCase() : null;
+            if (newTx._hlCode && !uniqueHLCodes.has(newTx._hlCode)) {
+                uniqueHLCodes.add(newTx._hlCode);
+                // Add to filter dropdown if new
+                if (filterHL) {
+                    const option = document.createElement('option');
+                    option.value = newTx._hlCode;
+                    option.textContent = newTx._hlCode;
+                    filterHL.appendChild(option);
+                }
+            }
+
+            // Add to list (Optimistic Update)
+            allTransactions.unshift(newTx);
+
+            // Re-render
+            applyFilters();
+
+            // Send to Backend
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === 'success') {
+                        // Show Success Toast
+                        const toast = document.getElementById('connectionToast');
+                        if (toast) {
+                            toast.classList.remove('hidden');
+                            toast.style.display = 'block';
+
+                            // Update content to success
+                            const container = toast.querySelector('.shadow-lg');
+                            container.className = 'rounded-md p-4 shadow-lg bg-green-50 border border-green-200';
+
+                            const text = toast.querySelector('.text-sm');
+                            if (text) {
+                                text.className = 'text-sm font-medium text-green-800';
+                                text.textContent = 'Operación guardada correctamente';
+                            }
+
+                            toast.style.opacity = '1';
+                            setTimeout(() => {
+                                toast.style.opacity = '0';
+                                setTimeout(() => { toast.style.display = 'none'; }, 500);
+                            }, 3000);
+                        }
+                        form.reset();
+                        // Reset date to today
+                        // Reset date to today (America/Lima)
+                        const dInput = document.getElementById('fecha_ingreso');
+                        if (dInput) {
+                            const peruDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Lima' });
+                            dInput.value = peruDate;
+                        }
+
+                        // Reset sign radio default
+                        const radio = document.querySelector('input[name="tipo"][value="egreso"]');
+                        if (radio) radio.checked = true;
+
+                    } else {
+                        throw new Error(result.message || 'Error desconocido');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    // Remove optimistic transaction
+                    allTransactions.shift();
+                    applyFilters();
+                    alert("Error al guardar: " + error.message);
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                });
+        });
+    }
+</script>
+{% endblock %}

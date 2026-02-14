@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5', // Indigo 600
+                        secondary: '#10B981', // Emerald 500
+                        dark: '#1F2937', // Gray 800
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Favicon & PWA -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon-96x96.png') }}"
+        sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="{{ url_for('static', filename='images/apple-touch-icon.png') }}" />
+    <meta name="apple-mobile-web-app-title" content="FinanzaApp" />
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 overflow-x-hidden">
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center gap-3">
+                        <div class="bg-primary text-white p-1 rounded-lg">
+                            <img src="{{ url_for('static', filename='images/favicon.svg') }}" alt="Zero logo"
+                                class="w-6 h-6 object-contain">
+                        </div>
+                        <span class="font-bold text-xl text-primary">Zero</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    {% if session.get('user_id') %}
+                    <!-- User is logged in -->
+                    {% if user is defined %}
+                    <span class="text-sm text-gray-700 mr-4 hidden md:inline-block">Hola, {{ user.name }}</span>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}"
+                        class="text-gray-500 hover:text-gray-700 text-sm font-medium">Cerrar Sesión</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}"
+                        class="text-primary hover:text-indigo-700 px-3 py-2 rounded-md text-sm font-medium">Iniciar
+                        Sesión</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 min-h-[calc(100vh-160px)]">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div
+            class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="bg-primary text-white p-1 rounded-lg">
+                    <img src="{{ url_for('static', filename='images/favicon.svg') }}" alt="Zero logo"
+                        class="w-5 h-5 object-contain">
+                </div>
+                <span class="font-bold text-lg text-gray-700">Zero</span>
+            </div>
+
+            <p class="text-sm text-gray-500">
+                &copy; 2026 Zero System. Todos los derechos reservados.
+            </p>
+
+            <div class="flex gap-4">
+                <a class="text-gray-400 hover:text-green-500 transition-colors" href="https://wa.me/51935533845"
+                    target="_blank" rel="noopener noreferrer">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"
+                        class="w-6 h-6">
+                </a>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+</body>
+
+</html>

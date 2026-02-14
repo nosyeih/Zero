@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Configuración Inicial</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">Conecta tu Google Sheet para empezar.</p>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+            <ol class="list-decimal list-inside space-y-4 text-gray-700">
+                <li>
+                    <strong>Copia la hoja de cálculo:</strong>
+                    Abre esta <a
+                        href="https://docs.google.com/spreadsheets/d/1TO-5_GhBMas77u3JAm8D5gEKEvPg31TaS66UnWFrCAU/edit?usp=sharing"
+                        target="_blank" class="text-primary hover:text-indigo-500 underline">plantilla oficial</a>.
+                    <br>Una vez abierta, ve a <strong>Archivo > Hacer una copia</strong> para guardarla en tu Google
+                    Drive personal.
+                    <br>Asegúrate de tener las siguientes columnas en la primera fila:
+                    <code
+                        class="bg-gray-100 px-1 py-0.5 rounded text-sm block mt-1">FECHA_INGRESO, EMPRESA, CONCEPTO_PAGO, MONEDA, MONTO, NRO_OPERACION, DETALLE</code>
+                </li>
+                <li>
+                    <strong>Abre el editor de Apps Script:</strong>
+                    En tu hoja de cálculo, ve a <span class="font-semibold">Extensiones > Apps Script</span>.
+                </li>
+                <li>
+                    <strong>Pega el código:</strong>
+                    Borra cualquier código existente y pega lo siguiente:
+                    <div class="relative group mt-2">
+                        <textarea readonly
+                            class="w-full h-32 p-2 bg-gray-50 border rounded text-xs font-mono text-gray-600 focus:outline-none"
+                            id="scriptCode">
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  var row = [
+    data.fecha_ingreso,
+    data.empresa,
+    data.concepto_pago,
+    data.moneda,
+    data.monto,
+    data.nro_operacion,
+    data.detalle
+  ];
+  sheet.appendRow(row);
+  return ContentService.createTextOutput(JSON.stringify({'status': 'success'})).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rows = sheet.getDataRange().getValues();
+  var headers = rows[0];
+  var data = [];
+  
+  for (var i = 1; i < rows.length; i++) {
+    var row = rows[i];
+    var record = {};
+    for (var j = 0; j < headers.length; j++) {
+      record[headers[j]] = row[j];
+    }
+    data.push(record);
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}
+</textarea>
+                        <button onclick="copyCode()"
+                            class="absolute top-2 right-2 bg-white border border-gray-300 rounded px-2 py-1 text-xs hover:bg-gray-50">Copiar</button>
+                    </div>
+                </li>
+                <li>
+                    <strong>Implementar como aplicación web:</strong>
+                    Haz clic en <span class="font-semibold">Implementar > Nueva implementación</span>.
+                    <ul class="list-disc list-inside ml-4 mt-1 text-sm text-gray-600">
+                        <li>Selecciona el tipo: <span class="font-semibold">Aplicación web</span>.</li>
+                        <li>Descripción: "API Finanzas".</li>
+                        <li>Ejecutar como: <span class="font-semibold">Yo (tú mismo)</span>.</li>
+                        <li>Quién tiene acceso: <span class="font-semibold">Cualquier usuario</span>.</li>
+                    </ul>
+                    Haz clic en <span class="font-semibold">Implementar</span> y copia la "URL de la aplicación web".
+                </li>
+            </ol>
+
+            <form action="{{ url_for('save_setup') }}" method="POST" class="mt-8">
+                <label for="webapp_url" class="block text-sm font-medium text-gray-700">URL de la Aplicación Web (Google
+                    Apps Script)</label>
+                <div class="mt-1 flex rounded-md shadow-sm">
+                    <input type="url" name="webapp_url" id="webapp_url" required
+                        class="flex-1 min-w-0 block w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-primary focus:border-primary sm:text-sm"
+                        placeholder="https://script.google.com/macros/s/...">
+                    <button type="submit"
+                        class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                        Guardar y Continuar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyCode() {
+        var copyText = document.getElementById("scriptCode");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        alert("Código copiado al portapapeles");
+    }
+</script>
+{% endblock %}
