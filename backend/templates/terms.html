@@ -1,0 +1,206 @@
+{% extends "base_landing.html" %}
+
+{% block title %}Términos y Condiciones - Zero{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-6 py-16">
+    <div class="text-center mb-16">
+        <h1 class="text-5xl font-black tracking-tight mb-4">Términos y Condiciones</h1>
+        <p class="text-xl text-gray-600">Condiciones de uso del servicio Zero</p>
+        <p class="text-sm text-gray-500 mt-2">Última actualización: Febrero 2026</p>
+    </div>
+
+    <div class="prose prose-lg max-w-none space-y-12">
+        <!-- Intro -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Bienvenido a Zero</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Estos Términos y Condiciones ("Términos") regulan tu acceso y uso de <strong>Zero Financial
+                    Systems</strong> ("Zero", "nosotros", "nuestro servicio"). Al usar Zero, aceptas estos términos en
+                su
+                totalidad.
+            </p>
+            <div class="mt-6 bg-amber-50 border-l-4 border-amber-500 p-4">
+                <p class="text-amber-900 font-semibold">⚠️ Importante:</p>
+                <p class="text-amber-800 mt-2">Si no estás de acuerdo con estos términos, no uses el servicio.</p>
+            </div>
+        </section>
+
+        <!-- Service description -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">1. Descripción del Servicio</h2>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Zero es una aplicación web de gestión financiera que se integra con Google Sheets. El servicio permite:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
+                <li>Visualizar y analizar datos financieros de tus hojas de cálculo de Google</li>
+                <li>Registrar transacciones (ingresos y egresos) directamente en tus sheets</li>
+                <li>Generar gráficos y reportes de rentabilidad</li>
+                <li>Acceder a utilidades adicionales (generador de QR, etc.)</li>
+            </ul>
+            <p class="text-gray-700 leading-relaxed mt-4">
+                Zero funciona como una <strong>capa de interfaz</strong> sobre tus datos existentes. No reemplaza ni
+                compite con Google Sheets, sino que lo complementa.
+            </p>
+        </section>
+
+        <!-- Account responsibilities -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">2. Responsabilidades del Usuario</h2>
+            <h3 class="text-xl font-semibold mt-6 mb-3">2.1 Cuenta de Google</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Para usar Zero, necesitas una cuenta de Google válida. Eres responsable de:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
+                <li>Mantener la seguridad de tu cuenta de Google</li>
+                <li>Todas las actividades que ocurran bajo tu cuenta</li>
+                <li>Notificarnos inmediatamente si sospechas de acceso no autorizado</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold mt-6 mb-3">2.2 Uso Apropiado</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">Te comprometes a NO:</p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
+                <li>Usar el servicio para actividades ilegales o fraudulentas</li>
+                <li>Intentar acceder a sistemas o datos de otros usuarios</li>
+                <li>Realizar ingeniería inversa, descompilar o hackear el servicio</li>
+                <li>Usar scripts automatizados que sobrecarguen el servicio</li>
+                <li>Revender o redistribuir el acceso a Zero sin autorización</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold mt-6 mb-3">2.3 Tus Datos</h3>
+            <p class="text-gray-700 leading-relaxed">
+                <strong>Tú eres el único propietario</strong> de los datos en tus Google Sheets. Zero solo actúa como
+                intermediario para acceder y visualizar esa información. Eres responsable de hacer copias de seguridad y
+                proteger tus datos.
+            </p>
+        </section>
+
+        <!-- Data and privacy -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">3. Privacidad y Protección de Datos</h2>
+            <p class="text-gray-700 leading-relaxed">
+                El manejo de tu información personal está regido por nuestra <a href="{{ url_for('privacy') }}"
+                    class="text-indigo-600 underline font-semibold">Política de Privacidad</a>. Al usar Zero, aceptas
+                también esa política.
+            </p>
+            <p class="text-gray-700 leading-relaxed mt-4">
+                <strong>Recuerda:</strong> Zero no almacena tus transacciones financieras. Todo vive en tu Google Drive
+                personal.
+            </p>
+        </section>
+
+        <!-- Limitations -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">4. Limitaciones del Servicio</h2>
+            <h3 class="text-xl font-semibold mt-6 mb-3">4.1 Disponibilidad</h3>
+            <p class="text-gray-700 leading-relaxed">
+                Zero se proporciona "tal cual" y "según disponibilidad". No garantizamos:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4 mt-4">
+                <li>Disponibilidad ininterrumpida del servicio (puede haber mantenimientos)</li>
+                <li>Ausencia total de errores o bugs</li>
+                <li>Compatibilidad con todos los formatos de Google Sheets</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold mt-6 mb-3">4.2 No Somos Asesores Financieros</h3>
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mt-4">
+                <p class="text-red-900 font-semibold">⚠️ Descargo de Responsabilidad:</p>
+                <p class="text-red-800 mt-2">
+                    Zero es una herramienta de <strong>visualización y gestión de datos</strong>. No proporcionamos
+                    asesoramiento financiero, contable o legal. Los cálculos de rentabilidad son informativos y no
+                    constituyen recomendaciones de inversión.
+                </p>
+            </div>
+
+            <h3 class="text-xl font-semibold mt-6 mb-3">4.3 Dependencia de Terceros</h3>
+            <p class="text-gray-700 leading-relaxed">
+                Zero depende de servicios de terceros (Google Sheets API, Google OAuth). No somos responsables por
+                interrupciones causadas por problemas en estos servicios externos.
+            </p>
+        </section>
+
+        <!-- Liability -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">5. Limitación de Responsabilidad</h2>
+            <p class="text-gray-700 leading-relaxed">
+                En la máxima medida permitida por la ley:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4 mt-4">
+                <li>Zero no será responsable por pérdida de datos, ganancias o daños indirectos</li>
+                <li>No garantizamos la precisión de cálculos automáticos (siempre verifica manualmente)</li>
+                <li>Tu uso del servicio es bajo tu propio riesgo</li>
+            </ul>
+            <p class="text-gray-700 leading-relaxed mt-4 font-semibold">
+                Nuestra responsabilidad total se limita al monto que hayas pagado por el servicio en los últimos 12
+                meses (si aplica).
+            </p>
+        </section>
+
+        <!-- Intellectual property -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">6. Propiedad Intelectual</h2>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Todos los derechos de propiedad intelectual sobre Zero (código, diseño, marca, logos) pertenecen a Zero
+                Financial Systems o sus licenciantes.
+            </p>
+            <p class="text-gray-700 leading-relaxed">
+                <strong>Tus datos siguen siendo tuyos.</strong> Zero no reclama ningún derecho sobre el contenido de tus
+                hojas de cálculo.
+            </p>
+        </section>
+
+        <!-- Termination -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">7. Terminación del Servicio</h2>
+            <h3 class="text-xl font-semibold mt-4 mb-3">7.1 Por Tu Parte</h3>
+            <p class="text-gray-700 leading-relaxed">
+                Puedes dejar de usar Zero en cualquier momento. Para eliminar completamente tu cuenta y datos asociados,
+                contáctanos en <a href="mailto:nosyeih@gmail.com"
+                    class="text-indigo-600 underline">nosyeih@gmail.com</a>.
+            </p>
+
+            <h3 class="text-xl font-semibold mt-6 mb-3">7.2 Por Nuestra Parte</h3>
+            <p class="text-gray-700 leading-relaxed">
+                Nos reservamos el derecho de suspender o terminar tu acceso si:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4 mt-4">
+                <li>Violas estos Términos</li>
+                <li>Tu actividad pone en riesgo la seguridad del servicio</li>
+                <li>Así lo requiere la ley</li>
+            </ul>
+        </section>
+
+        <!-- Changes to terms -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">8. Modificaciones a estos Términos</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Podemos actualizar estos Términos ocasionalmente. Te notificaremos sobre cambios importantes mediante un
+                aviso en la aplicación. El uso continuado del servicio después de cambios constituye tu aceptación.
+            </p>
+        </section>
+
+        <!-- Governing law -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">9. Ley Aplicable</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Estos Términos se rigen por las leyes de Perú. Cualquier disputa se resolverá en los tribunales
+                competentes de Lima, Perú.
+            </p>
+        </section>
+
+        <!-- Contact -->
+        <section class="bg-indigo-600 text-white rounded-2xl p-8">
+            <h2 class="text-2xl font-bold mb-4">Contacto</h2>
+            <p class="leading-relaxed mb-4">
+                Si tienes preguntas sobre estos Términos y Condiciones:
+            </p>
+            <div class="space-y-2">
+                <p><strong>Email:</strong> <a href="mailto:nosyeih@gmail.com" class="underline">nosyeih@gmail.com</a>
+                </p>
+                <p><strong>WhatsApp:</strong> <a href="https://wa.me/51935533845" target="_blank" class="underline">+51
+                        935 533 845</a></p>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

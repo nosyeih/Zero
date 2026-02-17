@@ -1,0 +1,182 @@
+{% extends "base_landing.html" %}
+
+{% block title %}Política de Privacidad - Zero{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-6 py-16">
+    <div class="text-center mb-16">
+        <h1 class="text-5xl font-black tracking-tight mb-4">Política de Privacidad</h1>
+        <p class="text-xl text-gray-600">Tu privacidad es nuestra prioridad</p>
+        <p class="text-sm text-gray-500 mt-2">Última actualización: Febrero 2026</p>
+    </div>
+
+    <div class="prose prose-lg max-w-none space-y-12">
+        <!-- Intro -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Introducción</h2>
+            <p class="text-gray-700 leading-relaxed">
+                En <strong>Zero Financial Systems</strong>, creemos que tus datos financieros te pertenecen
+                completamente. Esta política de privacidad explica cómo manejamos tu información cuando usas nuestro
+                servicio de gestión financiera basado en Google Sheets.
+            </p>
+            <div class="mt-6 bg-indigo-50 border-l-4 border-indigo-600 p-4">
+                <p class="text-indigo-900 font-semibold">🔒 Principio fundamental:</p>
+                <p class="text-indigo-800 mt-2">Zero <strong>nunca almacena tus datos financieros</strong> en nuestros
+                    servidores. Todo vive en tu Google Drive personal.</p>
+            </div>
+        </section>
+
+        <!-- What we collect -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Información que Recopilamos</h2>
+
+            <h3 class="text-xl font-semibold mt-6 mb-3">1. Información de Autenticación (OAuth de Google)</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Cuando inicias sesión con Google, recibimos:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
+                <li>Tu nombre completo</li>
+                <li>Tu dirección de correo electrónico</li>
+                <li>Tu foto de perfil de Google (si está disponible)</li>
+                <li>Un identificador único de Google (Google ID)</li>
+            </ul>
+            <p class="text-gray-600 text-sm mt-4 italic">Esta información se almacena de forma segura y se usa
+                únicamente
+                para identificarte dentro de la aplicación.</p>
+
+            <h3 class="text-xl font-semibold mt-8 mb-3">2. Configuración de Google Sheets</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Almacenamos la referencia (ID) de las hojas de cálculo que eliges conectar, para poder acceder a ellas
+                cuando uses Zero. <strong>No almacenamos el contenido</strong> de tus hojas de cálculo.
+            </p>
+
+            <h3 class="text-xl font-semibold mt-8 mb-3">3. Datos de Uso y Diagnóstico</h3>
+            <p class="text-gray-700 leading-relaxed">
+                Recopilamos información básica sobre cómo usas la aplicación (páginas visitadas, errores técnicos) para
+                mejorar el servicio. Esta información es anónima y no incluye datos financieros.
+            </p>
+        </section>
+
+        <!-- What we DON'T collect -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Lo que NO Recopilamos</h2>
+            <div class="space-y-4">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">❌</span>
+                    <div>
+                        <p class="font-semibold text-gray-900">Tus transacciones financieras</p>
+                        <p class="text-gray-600 text-sm">Los ingresos y gastos viven exclusivamente en tu Google Sheet.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">❌</span>
+                    <div>
+                        <p class="font-semibold text-gray-900">Datos bancarios o números de tarjeta</p>
+                        <p class="text-gray-600 text-sm">Zero no procesa pagos ni accede a cuentas bancarias.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">❌</span>
+                    <div>
+                        <p class="font-semibold text-gray-900">Información no autorizada de tu Google Drive</p>
+                        <p class="text-gray-600 text-sm">Solo accedemos a las hojas que tú explícitamente conectas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How we use data -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Cómo Usamos tu Información</h2>
+            <ul class="list-decimal list-inside text-gray-700 space-y-3 ml-4">
+                <li><strong>Proveer el servicio:</strong> Acceder a tus hojas de Google Sheets para mostrar gráficos,
+                    análisis y registrar transacciones.</li>
+                <li><strong>Autenticación:</strong> Verificar tu identidad cuando inicias sesión.</li>
+                <li><strong>Mejoras del producto:</strong> Analizar patrones de uso (de forma anónima) para optimizar la
+                    experiencia.</li>
+                <li><strong>Soporte técnico:</strong> Diagnosticar y solucionar problemas que reportes.</li>
+            </ul>
+        </section>
+
+        <!-- Data sharing -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Compartición de Datos</h2>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                <strong>No vendemos ni compartimos</strong> tu información personal con terceros con fines publicitarios
+                o comerciales.
+            </p>
+            <p class="text-gray-700 leading-relaxed">
+                Podríamos compartir información únicamente en estos casos excepcionales:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4 mt-4">
+                <li><strong>Proveedores de servicios:</strong> Google (para autenticación y acceso a Sheets), servicios
+                    de hosting confiables.</li>
+                <li><strong>Requerimientos legales:</strong> Si la ley lo exige o para proteger derechos legales.</li>
+            </ul>
+        </section>
+
+        <!-- Cookie policy -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Cookies y Tecnologías Similares</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Usamos cookies de sesión para mantener tu inicio de sesión activo mientras navegas en Zero. Estas
+                cookies son esenciales para el funcionamiento del servicio y se eliminan cuando cierras la sesión.
+            </p>
+        </section>
+
+        <!-- Your rights -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Tus Derechos</h2>
+            <p class="text-gray-700 leading-relaxed mb-4">Tienes derecho a:</p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
+                <li>Acceder a la información personal que tenemos sobre ti</li>
+                <li>Solicitar la corrección de datos incorrectos</li>
+                <li>Solicitar la eliminación de tu cuenta y datos asociados</li>
+                <li>Revocar el acceso de Zero a tus Google Sheets en cualquier momento</li>
+                <li>Exportar tus datos (que ya están en tu Google Sheet)</li>
+            </ul>
+            <p class="text-gray-600 mt-6 text-sm">Para ejercer estos derechos, contáctanos en <a
+                    href="mailto:nosyeih@gmail.com" class="text-indigo-600 underline">nosyeih@gmail.com</a></p>
+        </section>
+
+        <!-- Data security -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Seguridad de los Datos</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Implementamos medidas técnicas y organizativas para proteger tu información:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4 mt-4">
+                <li>Conexiones cifradas (HTTPS/TLS)</li>
+                <li>Autenticación segura mediante OAuth 2.0 de Google</li>
+                <li>Acceso limitado a datos internos solo por personal autorizado</li>
+                <li>Monitoreo continuo de vulnerabilidades</li>
+            </ul>
+        </section>
+
+        <!-- Changes to policy -->
+        <section class="bg-white rounded-2xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4">Cambios a esta Política</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Podemos actualizar esta política ocasionalmente. Te notificaremos sobre cambios significativos mediante
+                un aviso en la aplicación o por correo electrónico. La fecha de "última actualización" siempre estará
+                visible al inicio de este documento.
+            </p>
+        </section>
+
+        <!-- Contact -->
+        <section class="bg-indigo-600 text-white rounded-2xl p-8">
+            <h2 class="text-2xl font-bold mb-4">Contacto</h2>
+            <p class="leading-relaxed mb-4">
+                Si tienes preguntas sobre esta Política de Privacidad, contáctanos:
+            </p>
+            <div class="space-y-2">
+                <p><strong>Email:</strong> <a href="mailto:nosyeih@gmail.com" class="underline">nosyeih@gmail.com</a>
+                </p>
+                <p><strong>WhatsApp:</strong> <a href="https://wa.me/51935533845" target="_blank" class="underline">+51
+                        935 533 845</a></p>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

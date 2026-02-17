@@ -3,6 +3,7 @@ from authlib.integrations.flask_client import OAuth
 from flask_sqlalchemy import SQLAlchemy
 import os
 import requests
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -118,6 +119,14 @@ from datetime import datetime
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    user = db.session.get(User, session['user_id'])
+    return render_template('hub.html', user=user)
+
+@app.route('/operations')
+def operations():
+    if 'user_id' not in session:
         return redirect(url_for('index'))
     
     user = db.session.get(User, session['user_id'])
@@ -132,7 +141,13 @@ def dashboard():
     try:
         response = requests.get(user.webapp_url, allow_redirects=True, timeout=5)
         if response.status_code == 200:
-            transactions = response.json()
+            data_resp = response.json()
+            if isinstance(data_resp, dict) and 'data' in data_resp:
+                transactions = data_resp['data']
+            elif isinstance(data_resp, list):
+                transactions = data_resp
+            else:
+                transactions = []
             sheet_status = 'success'
     except Exception as e:
         flash(f"Error de conexión con la hoja: {str(e)}", 'error')
@@ -296,7 +311,7 @@ def dashboard():
     income_data_usd = [chart_data_usd[m]['Ingreso'] for m in sorted_months_usd]
     expense_data_usd = [chart_data_usd[m]['Egreso'] for m in sorted_months_usd]
 
-    return render_template('dashboard.html', user=user, transactions=transactions, sheet_status=sheet_status,
+    return render_template('operations.html', user=user, transactions=transactions, sheet_status=sheet_status,
                            totals=totals,
                            chart_pen={'labels': labels_pen, 'income': income_data_pen, 'expense': expense_data_pen},
                            chart_usd={'labels': labels_usd, 'income': income_data_usd, 'expense': expense_data_usd})
@@ -364,6 +379,146 @@ def add_transaction():
         flash(msg, 'error')
         
     return redirect(url_for('dashboard'))
+
+@app.route('/profit', methods=['GET', 'POST'])
+def profit_calculator():
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+    
+    user = db.session.get(User, session['user_id'])
+    if not user.webapp_url:
+        return redirect(url_for('setup'))
+
+    sheets = []
+    selected_sheet = None
+    analysis = None
+    error = None
+
+    spreadsheet_url = None
+
+    # Helper to fetch sheets
+    try:
+        # Fetch sheet list
+        resp = requests.get(f"{user.webapp_url}?action=listSheets", timeout=10)
+        if resp.status_code == 200:
+            data = resp.json()
+            
+            all_sheets = []
+            if isinstance(data, list):
+                all_sheets = data
+                print("DEBUG: GAS response is a LIST. URL will be None.", flush=True)
+            elif isinstance(data, dict):
+                all_sheets = data.get('sheets', [])
+                spreadsheet_url = data.get('url')
+                print(f"DEBUG: GAS response is a DICT. URL: {spreadsheet_url}", flush=True)
+
+            # Filter main sheet if possible, or just list all
+            sheets = [s for s in all_sheets if s != 'Transacciones' and s != 'Config'] # Basic filtering
+        else:
+            print(f"DEBUG: Failed to list sheets. Status: {resp.status_code}", flush=True)
+            error = "Error al obtener lista de hojas."
+    except Exception as e:
+        error = f"Error de conexión: {str(e)}"
+
+    if request.method == 'POST':
+        selected_sheet = request.form.get('sheet_name')
+        if selected_sheet:
+            try:
+                # Fetch data for specific sheet
+                resp = requests.get(f"{user.webapp_url}?sheet={selected_sheet}", timeout=10)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    
+                    # Logic 
+                    # Data format: {'sli': 123.45, 'data': [{'Producto': '...', ...}, ...]}
+                    sli = float(data.get('sli', 0))
+                    items_raw = data.get('data', [])
+                    
+                    # Calculate Logic
+                    total_fob = 0
+                    processed_items = []
+                    
+                    # 1. First Pass: Calculate Total FOB
+                    # Validation: We expect columns like 'Total' or calculated from Qty * Unit
+                    # Let's assume headers are flexible but try to find 'Total' or use 'Cantidad'*'Precio Unitario'
+                    # Default keys based on user description: Producto, Cantidad, Precio Unitario, Total
+                    
+                    for row in items_raw:
+                        # Case insensitive key search helper
+                        def get_val(r, keys):
+                            for k in r.keys():
+                                if k.lower() in [x.lower() for x in keys]:
+                                    return r[k]
+                            return 0
+
+                        qty = float(get_val(row, ['Cantidad', 'Qty', 'Cant', 'CANTIDAD']) or 0)
+                        unit_fob = float(get_val(row, ['Precio Unitario', 'Unit Price', 'FOB Unit', 'PRECIO_UNITARIO']) or 0)
+                        row_total = float(get_val(row, ['Total', 'Amount', 'PRECIO_TOTAL', 'TOTAL']) or (qty * unit_fob))
+                        
+                        # Store flexible object
+                        if qty > 0 and unit_fob > 0:
+                            # Try to find name in PRODUCTO or Product
+                            prod_name = get_val(row, ['Producto', 'Product', 'PRODUCTO', 'Name', 'Item', 'Description'])
+                            if not prod_name:
+                                prod_name = list(row.values())[0] # Fallback to first col
+
+                            total_fob += row_total
+                            processed_items.append({
+                                'name': prod_name,
+                                'qty': qty,
+                                'unit_fob': unit_fob,
+                                'total_fob': row_total
+                            })
+
+                    # 2. Calculate Factor
+                    factor = 0
+                    if total_fob > 0:
+                        factor = sli / total_fob
+                    
+                    # 3. Calculate Landed Cost
+                    final_items = []
+                    for item in processed_items:
+                        # Unit Landed = Unit FOB * (1 + Factor)
+                        unit_landed = item['unit_fob'] * (1 + factor)
+                        item['unit_landed'] = unit_landed
+                        final_items.append(item)
+
+                    analysis = {
+                        'total_fob': total_fob,
+                        'sli': sli,
+                        'factor': factor,
+                        'products': final_items
+                    }
+
+                else:
+                    error = "Error al obtener datos de la hoja."
+            except Exception as e:
+                error = f"Error calculando profit: {str(e)}"
+
+    return render_template('profit.html', user=user, sheets=sheets, selected_sheet=selected_sheet, analysis=analysis, error=error, spreadsheet_url=spreadsheet_url)
+
+@app.route('/utilities')
+def utilities():
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+    
+    user = db.session.get(User, session['user_id'])
+    return render_template('utilities.html', user=user)
+
+@app.route('/help')
+def help_center():
+    return render_template('help.html')
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+@app.route('/terms')
+def terms():
+    return render_template('terms.html')
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

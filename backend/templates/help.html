@@ -1,0 +1,154 @@
+{% extends "base_landing.html" %}
+
+{% block title %}Centro de Ayuda - Zero{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-6 py-16">
+    <!-- Hero -->
+    <div class="text-center mb-16">
+        <h1 class="text-5xl font-black tracking-tight mb-4">Centro de Ayuda</h1>
+        <p class="text-xl text-gray-600">Todo lo que necesitas saber para dominar Zero</p>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-8">Preguntas Frecuentes</h2>
+        <div class="space-y-6">
+            <!-- FAQ 1 -->
+            <div class="bg-white rounded-2xl p-8 border border-gray-200">
+                <h3 class="text-xl font-bold mb-3">¿Cómo funciona la integración con Google Sheets?</h3>
+                <p class="text-gray-600 leading-relaxed">Zero se conecta directamente a tu hoja de cálculo de Google
+                    mediante la API oficial de Google. Simplemente autenticas tu cuenta con Google OAuth, seleccionas
+                    tu hoja de cálculo, y Zero lee (y opcionalmente escribe) los datos en tiempo real. Tu información
+                    permanece <strong>completamente en tu Google Drive</strong>, nunca almacenamos tus datos
+                    financieros en nuestros servidores.</p>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="bg-white rounded-2xl p-8 border border-gray-200">
+                <h3 class="text-xl font-bold mb-3">¿Qué permisos necesita Zero?</h3>
+                <p class="text-gray-600 leading-relaxed mb-4">Zero solicita permisos mínimos de Google:</p>
+                <ul class="list-disc list-inside text-gray-600 space-y-2 ml-4">
+                    <li><strong>Ver y gestionar tus hojas de cálculo</strong>: Para leer transacciones y escribir
+                        nuevas operaciones.</li>
+                    <li><strong>Información básica de perfil</strong>: Tu nombre y email para personalizar la
+                        experiencia.</li>
+                </ul>
+                <p class="text-gray-600 leading-relaxed mt-4">Puedes revocar estos permisos en cualquier momento desde
+                    tu cuenta de Google.</p>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="bg-white rounded-2xl p-8 border border-gray-200">
+                <h3 class="text-xl font-bold mb-3">¿Necesito crear una hoja desde cero?</h3>
+                <p class="text-gray-600 leading-relaxed">No necesariamente. Si ya tienes un sistema de gestión en
+                    Google Sheets, Zero puede adaptarse a tu estructura existente siempre que tenga columnas básicas
+                    como Fecha, Empresa, Concepto, Monto y Moneda. Si prefieres empezar de cero, puedes duplicar
+                    nuestra plantilla recomendada desde la sección de configuración.</p>
+            </div>
+
+            <!-- FAQ 4 -->
+            <div class="bg-white rounded-2xl p-8 border border-gray-200">
+                <h3 class="text-xl font-bold mb-3">¿Puedo usar Zero sin conexión a internet?</h3>
+                <p class="text-gray-600 leading-relaxed">Zero requiere conexión a internet para sincronizar con Google
+                    Sheets en tiempo real. Sin embargo, puedes acceder a Google Sheets directamente en modo offline
+                    desde la app de Google, y los cambios se sincronizarán automáticamente con Zero cuando vuelvas a
+                    estar en línea.</p>
+            </div>
+
+            <!-- FAQ 5 -->
+            <div class="bg-white rounded-2xl p-8 border border-gray-200">
+                <h3 class="text-xl font-bold mb-3">¿Qué pasa si borro o modifico datos en Google Sheets?</h3>
+                <p class="text-gray-600 leading-relaxed">Los cambios se reflejan inmediatamente en Zero al recargar la
+                    página. Recuerda que Google Sheets mantiene un historial de versiones, así que siempre puedes
+                    recuperar datos eliminados accidentalmente desde <strong>Archivo → Historial de
+                        versiones</strong> en tu hoja.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting Started Guide -->
+    <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-8">Guía de Inicio Rápido</h2>
+        <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl p-8 border border-indigo-100">
+            <div class="space-y-6">
+                <div class="flex gap-4">
+                    <div
+                        class="flex-shrink-0 w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">
+                        1</div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Inicia sesión con Google</h3>
+                        <p class="text-gray-700">Haz clic en "Iniciar con Google" y autoriza a Zero a acceder a tus
+                            hojas de cálculo.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div
+                        class="flex-shrink-0 w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">
+                        2</div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Configura tu hoja de cálculo</h3>
+                        <p class="text-gray-700">Ve a Configurar Sheet, pega el ID de tu Google Sheet y selecciona la
+                            pestaña de datos.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div
+                        class="flex-shrink-0 w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">
+                        3</div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Comienza a registrar operaciones</h3>
+                        <p class="text-gray-700">Navega a "Finanzas" y registra tu primera transacción. ¡Listo! Tus
+                            datos se sincronizan automáticamente.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Troubleshooting -->
+    <section>
+        <h2 class="text-3xl font-bold mb-8">Solución de Problemas</h2>
+        <div class="space-y-6">
+            <div class="bg-white rounded-2xl p-8 border border-gray-200">
+                <h3 class="text-xl font-bold mb-3">❌ Error: "No se pudo conectar a Google Sheets"</h3>
+                <p class="text-gray-600 leading-relaxed mb-3"><strong>Solución:</strong></p>
+                <ol class="list-decimal list-inside text-gray-600 space-y-2 ml-4">
+                    <li>Verifica que el ID de la hoja sea correcto (lo encuentras en la URL de tu Google Sheet).</li>
+                    <li>Asegúrate de que la hoja no sea privada o tenga restricciones de acceso.</li>
+                    <li>Revoca los permisos de Zero en tu cuenta de Google y vuelve a autenticarte.</li>
+                </ol>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 border border-gray-200">
+                <h3 class="text-xl font-bold mb-3">⚠️ Los gráficos no muestran datos</h3>
+                <p class="text-gray-600 leading-relaxed mb-3"><strong>Solución:</strong></p>
+                <ol class="list-decimal list-inside text-gray-600 space-y-2 ml-4">
+                    <li>Verifica que las columnas de tu hoja tengan los nombres exactos: FECHA_INGRESO, MONTO, MONEDA.
+                    </li>
+                    <li>Asegúrate de que los montos sean números (sin símbolos de moneda en la celda).</li>
+                    <li>Recarga la página para forzar la sincronización.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <div class="mt-16 bg-indigo-600 rounded-2xl p-12 text-center text-white">
+        <h2 class="text-3xl font-bold mb-4">¿Aún necesitas ayuda?</h2>
+        <p class="text-lg mb-8 text-indigo-100">Nuestro equipo está aquí para ti</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="https://wa.me/51935533845" target="_blank"
+                class="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-3 rounded-xl font-bold hover:bg-indigo-50 transition-colors">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"
+                    class="w-5 h-5">
+                WhatsApp
+            </a>
+            <a href="mailto:nosyeih@gmail.com"
+                class="inline-flex items-center gap-2 bg-indigo-700 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-800 transition-colors">
+                Email
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

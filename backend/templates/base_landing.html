@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{% block title %}Zero - Gravedad Financiera{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <!-- Favicon & PWA -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon-96x96.png') }}"
+        sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="{{ url_for('static', filename='images/apple-touch-icon.png') }}" />
+    <meta name="apple-mobile-web-app-title" content="FinanzaApp" />
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-background-light text-[#111418] antialiased">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-[#e5e7eb]">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="{{ url_for('index') }}" class="flex items-center gap-3">
+                <div class="bg-primary text-white p-1.5 rounded-lg">
+                    <img src="{{ url_for('static', filename='images/favicon.svg') }}" alt="Zero logo"
+                        class="w-6 h-6 object-contain">
+                </div>
+                <h1 class="text-xl font-bold tracking-tight">Zero</h1>
+            </a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-sm font-medium hover:text-primary transition-colors"
+                    href="{{ url_for('index') }}">Home</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <a href="{{ url_for('login') }}"
+                    class="text-sm font-bold px-4 py-2 rounded-xl hover:bg-gray-100 transition-colors">Iniciar
+                    Sesión</a>
+                <a href="{{ url_for('login') }}"
+                    class="bg-primary text-white text-sm font-bold px-6 py-2.5 rounded-xl hover:shadow-lg hover:shadow-primary/30 transition-all">
+                    Comenzar Gratis
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-[#e5e7eb] pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div class="flex flex-col gap-6">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-primary text-white p-1 rounded-lg">
+                            <img src="{{ url_for('static', filename='images/favicon.svg') }}" alt="Zero logo"
+                                class="w-6 h-6 object-contain">
+                        </div>
+                        <h2 class="text-xl font-bold tracking-tight">Zero</h2>
+                    </div>
+                    <p class="text-[#60708a] text-sm leading-relaxed">
+                        La capa de inteligencia que tus finanzas necesitaban. Directo a tu Google Sheets.
+                    </p>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400">Contacto</h4>
+                    <a class="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
+                        href="tel:+51935533845">
+                        <span class="material-symbols-outlined text-base">call</span>
+                        +51 935 533 845
+                    </a>
+                    <a class="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
+                        href="mailto:nosyeih@gmail.com">
+                        <span class="material-symbols-outlined text-base">mail</span>
+                        nosyeih@gmail.com
+                    </a>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400">Comunidad</h4>
+                    <a class="text-sm font-medium hover:text-primary transition-colors"
+                        href="{{ url_for('help_center') }}">Centro de ayuda</a>
+                    <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Blog de finanzas</a>
+                    <a class="text-sm font-medium hover:text-primary transition-colors" href="#">API Docs</a>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400">Legal</h4>
+                    <a class="text-sm font-medium hover:text-primary transition-colors"
+                        href="{{ url_for('privacy') }}">Privacidad</a>
+                    <a class="text-sm font-medium hover:text-primary transition-colors"
+                        href="{{ url_for('terms') }}">Términos y
+                        Condiciones</a>
+                </div>
+            </div>
+            <div class="border-t border-[#f0f2f5] pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-xs text-[#60708a]">© 2026 Zero Financial Systems. Todos los derechos reservados.</p>
+                <div class="flex gap-6">
+                    <a class="text-[#60708a] hover:text-primary transition-colors" href="https://wa.me/51935533845"
+                        target="_blank" rel="noopener noreferrer">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"
+                            class="w-6 h-6">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

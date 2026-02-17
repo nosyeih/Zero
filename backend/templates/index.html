@@ -1,303 +1,160 @@
-<!DOCTYPE html>
+{% extends "base_landing.html" %}
 
-<html lang="es">
-
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Zero - Gravedad Financiera</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <!-- Favicon & PWA -->
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon-96x96.png') }}"
-        sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}" />
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" />
-    <link rel="apple-touch-icon" sizes="180x180"
-        href="{{ url_for('static', filename='images/apple-touch-icon.png') }}" />
-    <meta name="apple-mobile-web-app-title" content="FinanzaApp" />
-    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}" />
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#3c83f6",
-                        "background-light": "#f5f7f8",
-                        "background-dark": "#101722",
-                    },
-                    fontFamily: {
-                        "display": ["Inter", "sans-serif"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.5rem",
-                        "lg": "1rem",
-                        "xl": "1.5rem",
-                        "full": "9999px"
-                    },
-                },
-            },
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-    </style>
-</head>
-
-<body class="bg-background-light text-[#111418] antialiased">
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-[#e5e7eb]">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="bg-primary text-white p-1.5 rounded-lg">
-                    <img src="{{ url_for('static', filename='images/favicon.svg') }}" alt="Zero logo"
-                        class="w-6 h-6 object-contain">
-                </div>
-                <h1 class="text-xl font-bold tracking-tight">Zero</h1>
+{% block content %}
+<!-- Hero Section -->
+<section class="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40">
+    <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+        <div class="flex flex-col gap-8">
+            <div class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full w-fit">
+                <span class="material-symbols-outlined text-sm">auto_awesome</span>
+                <span class="text-xs font-bold uppercase tracking-wider">Nueva era financiera</span>
             </div>
-            <nav class="hidden md:flex items-center gap-8">
-                <a class="text-sm font-medium hover:text-primary transition-colors" href="/">Home</a>
-            </nav>
-            <div class="flex items-center gap-4">
+            <h1 class="text-5xl lg:text-7xl font-black leading-[1.1] tracking-tight text-[#111418]">
+                Zero gravedad financiera
+            </h1>
+            <p class="text-lg lg:text-xl text-[#60708a] leading-relaxed max-w-lg">
+                Elimina el peso de la gestión manual. Zero transforma tus hojas de cálculo en un sistema ligero,
+                claro y preciso. Tus finanzas, sin fricción.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4">
                 <a href="{{ url_for('login') }}"
-                    class="text-sm font-bold px-4 py-2 rounded-xl hover:bg-gray-100 transition-colors">Iniciar
-                    Sesión</a>
-                <a href="{{ url_for('login') }}"
-                    class="bg-primary text-white text-sm font-bold px-6 py-2.5 rounded-xl hover:shadow-lg hover:shadow-primary/30 transition-all">
-                    Comenzar Gratis
+                    class="flex items-center justify-center gap-3 bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-primary/40 transition-all">
+                    <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+                        <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            fill="#4285F4"></path>
+                        <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853"></path>
+                        <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                            fill="#FBBC05"></path>
+                        <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            fill="#EA4335"></path>
+                    </svg>
+                    Iniciar con Google
                 </a>
             </div>
         </div>
-    </header>
-    <main class="pt-20">
-        <!-- Hero Section -->
-        <section class="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40">
-            <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-                <div class="flex flex-col gap-8">
-                    <div
-                        class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full w-fit">
-                        <span class="material-symbols-outlined text-sm">auto_awesome</span>
-                        <span class="text-xs font-bold uppercase tracking-wider">Nueva era financiera</span>
-                    </div>
-                    <h1 class="text-5xl lg:text-7xl font-black leading-[1.1] tracking-tight text-[#111418]">
-                        Zero gravedad financiera
-                    </h1>
-                    <p class="text-lg lg:text-xl text-[#60708a] leading-relaxed max-w-lg">
-                        Elimina el peso de la gestión manual. Zero transforma tus hojas de cálculo en un sistema ligero,
-                        claro y preciso. Tus finanzas, sin fricción.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="{{ url_for('login') }}"
-                            class="flex items-center justify-center gap-3 bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-primary/40 transition-all">
-                            <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
-                                <path
-                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                                    fill="#4285F4"></path>
-                                <path
-                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                                    fill="#34A853"></path>
-                                <path
-                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                                    fill="#FBBC05"></path>
-                                <path
-                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                                    fill="#EA4335"></path>
-                            </svg>
-                            Iniciar con Google
-                        </a>
-                    </div>
-                </div>
-                <div class="relative">
-                    <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10"></div>
-                    <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10"></div>
-                    <div class="rounded-2xl border border-white/50 shadow-2xl overflow-hidden bg-white">
-                        <img class="w-full h-auto object-cover"
-                            data-alt="Desktop dashboard showing financial charts and tables"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcgKp6T1dGwpk_YpEHrJIjwT58mbJkSFAjt44yeMw5oS0zQReihPp_6CHY61p-kBmNcKMDPT06l6YNf0ZTfUfRDZsHjrBKhiGptiB0BAh6_TiW9wBEhvg4UhXekiVDzBU_aGzmC1oibmoQZdI7CpYz21xFPozTpGHnOn_ns881JXUjM6Bsn-Fi-di6E5B_rGJlf-d2a1kO7rh2l1pxgUhQHtOArWo1SjGX5W0OO3_hyp7_To4MPDpc3vCawi4FJ-HDvifTHuwcowg" />
-                    </div>
-                    <div
-                        class="absolute -bottom-10 -left-10 w-48 lg:w-64 rounded-3xl border-4 border-white shadow-2xl overflow-hidden bg-white hidden md:block">
-                        <img class="w-full h-auto object-cover"
-                            data-alt="Mobile app interface for recording new expenses"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc8HmOzHAae_eFjz9iWE_te0I0ayWCpdkH5z-_rW-k5XMde4lfTsRwkO825SAlHmZIX4qSlJEfBJOEQVCjNmIPAl6vE8TwGB02vFi5lV-ZmVOOvkjCr6DqLOXNWgY8R5UjSF8K1WsvHqhAHM0HGUQlRuWQasbmG-Efi38qro7WTtYbgMz3C9cSSZQf2brijZ9xyS_cZo2lCvy0WLgXhttYy6VcbpLWIqvvBM754MG5gJd3XYr0vdJ8RMrRjdm8UNCplMsZHckydN8" />
-                    </div>
-                </div>
+        <div class="relative">
+            <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10"></div>
+            <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10"></div>
+            <div class="rounded-2xl border border-white/50 shadow-2xl overflow-hidden bg-white">
+                <img class="w-full h-auto object-cover" data-alt="Desktop dashboard showing financial charts and tables"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcgKp6T1dGwpk_YpEHrJIjwT58mbJkSFAjt44yeMw5oS0zQReihPp_6CHY61p-kBmNcKMDPT06l6YNf0ZTfUfRDZsHjrBKhiGptiB0BAh6_TiW9wBEhvg4UhXekiVDzBU_aGzmC1oibmoQZdI7CpYz21xFPozTpGHnOn_ns881JXUjM6Bsn-Fi-di6E5B_rGJlf-d2a1kO7rh2l1pxgUhQHtOArWo1SjGX5W0OO3_hyp7_To4MPDpc3vCawi4FJ-HDvifTHuwcowg" />
             </div>
-        </section>
-        <!-- Value Proposition -->
-        <section class="py-24 bg-white">
-            <div class="max-w-7xl mx-auto px-6 text-center">
-                <div class="max-w-3xl mx-auto flex flex-col gap-6">
-                    <h2 class="text-4xl lg:text-5xl font-black tracking-tight leading-tight">
-                        La Nueva Forma de Ver el Dinero. <span class="text-primary">Menos hojas de cálculo, más
-                            decisiones.</span>
-                    </h2>
-                    <p class="text-xl text-[#60708a] leading-relaxed">
-                        Diseñado para quienes aman la flexibilidad de Excel pero odian el desorden visual. Zero es tu
-                        capa de inteligencia sobre tus datos.
-                    </p>
-                </div>
-            </div>
-        </section>
-        <!-- Features Grid -->
-        <section class="py-24 bg-background-light" id="funciones">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Feature 1 -->
-                    <div
-                        class="bg-white p-8 rounded-2xl border border-[#e5e7eb] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
-                        <div
-                            class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
-                            <span class="material-symbols-outlined">visibility</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Claridad Mental Inmediata</h3>
-                        <p class="text-[#60708a] leading-relaxed">Visualiza tus Ingresos, Gastos y Saldo en segundos.
-                            Sin fórmulas complejas ni errores de formato.</p>
-                    </div>
-                    <!-- Feature 2 -->
-                    <div
-                        class="bg-white p-8 rounded-2xl border border-[#e5e7eb] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
-                        <div
-                            class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
-                            <span class="material-symbols-outlined">payments</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Realidad Multimoneda</h3>
-                        <p class="text-[#60708a] leading-relaxed">Separación automática de cuentas para diferentes
-                            divisas con tipos de cambio actualizados al instante.</p>
-                    </div>
-                    <!-- Feature 3 -->
-                    <div
-                        class="bg-white p-8 rounded-2xl border border-[#e5e7eb] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
-                        <div
-                            class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
-                            <span class="material-symbols-outlined">analytics</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Rentabilidad por Proyecto</h3>
-                        <p class="text-[#60708a] leading-relaxed">Filtra por código de proyecto y ve la utilidad neta en
-                            tiempo real. Toma decisiones basadas en datos.</p>
-                    </div>
-                    <!-- Feature 4 -->
-                    <div
-                        class="bg-white p-8 rounded-2xl border border-[#e5e7eb] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
-                        <div
-                            class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
-                            <span class="material-symbols-outlined">database</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Tus Datos Son Tuyos</h3>
-                        <p class="text-[#60708a] leading-relaxed">Todo vive en tu Google Sheet personal. Sin bloqueos de
-                            datos ni exportaciones tediosas. Privacidad total.</p>
-                    </div>
-                    <!-- Feature 5 -->
-                    <div
-                        class="bg-white p-8 rounded-2xl border border-[#e5e7eb] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
-                        <div
-                            class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
-                            <span class="material-symbols-outlined">bolt</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Registro Sin Fricción</h3>
-                        <p class="text-[#60708a] leading-relaxed">Interfaz veloz optimizada para registrar gastos en
-                            menos de 5 segundos desde cualquier dispositivo.</p>
-                    </div>
-                    <!-- Special Card (CTA Placeholder) -->
-                    <div
-                        class="bg-primary p-8 rounded-2xl flex flex-col justify-center items-center text-center text-white">
-                        <span class="material-symbols-outlined text-4xl mb-4">rocket_launch</span>
-                        <h3 class="text-xl font-bold mb-2">Más por venir</h3>
-                        <p class="text-white/80 text-sm">Estamos construyendo el futuro de las finanzas personales.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Bottom CTA -->
-        <section class="py-24 relative overflow-hidden">
-            <div class="absolute inset-0 bg-primary opacity-5"></div>
-            <div class="max-w-4xl mx-auto px-6 relative text-center">
-                <div class="flex flex-col gap-8 items-center">
-                    <h2 class="text-4xl lg:text-5xl font-black tracking-tight leading-tight">
-                        ¿Listo para retomar el control?
-                    </h2>
-                    <p class="text-xl text-[#60708a] leading-relaxed">
-                        Únete a la nueva era de las finanzas personales inteligentes. Configura tu cuenta en menos de 2
-                        minutos.
-                    </p>
-                    <a href="{{ url_for('login') }}"
-                        class="bg-primary text-white px-10 py-5 rounded-2xl font-bold text-xl hover:shadow-2xl hover:shadow-primary/50 transition-all hover:-translate-y-1 inline-block">
-                        Iniciar Ahora
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
-    <!-- Footer -->
-    <footer class="bg-white border-t border-[#e5e7eb] pt-20 pb-10">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-                <div class="flex flex-col gap-6">
-                    <div class="flex items-center gap-3">
-                        <div class="bg-primary text-white p-1 rounded-lg">
-                            <img src="{{ url_for('static', filename='images/favicon.svg') }}" alt="Zero logo"
-                                class="w-6 h-6 object-contain">
-                        </div>
-                        <h2 class="text-xl font-bold tracking-tight">Zero</h2>
-                    </div>
-                    <p class="text-[#60708a] text-sm leading-relaxed">
-                        La capa de inteligencia que tus finanzas necesitaban. Directo a tu Google Sheets.
-                    </p>
-                </div>
-                <div class="flex flex-col gap-4">
-                    <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400">Contacto</h4>
-                    <a class="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
-                        href="tel:+51935533845">
-                        <span class="material-symbols-outlined text-base">call</span>
-                        +51 935 533 845
-                    </a>
-                    <a class="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
-                        href="mailto:soporte@zerosystem.com">
-                        <span class="material-symbols-outlined text-base">mail</span>
-                        soporte@zerosystem.com
-                    </a>
-                </div>
-                <div class="flex flex-col gap-4">
-                    <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400">Comunidad</h4>
-                    <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Centro de ayuda</a>
-                    <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Blog de finanzas</a>
-                    <a class="text-sm font-medium hover:text-primary transition-colors" href="#">API Docs</a>
-                </div>
-                <div class="flex flex-col gap-4">
-                    <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400">Legal</h4>
-                    <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Privacidad</a>
-                    <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Términos y
-                        Condiciones</a>
-                </div>
-            </div>
-            <div class="border-t border-[#f0f2f5] pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
-                <p class="text-xs text-[#60708a]">© 2024 Zero Financial Systems. Todos los derechos reservados.</p>
-                <div class="flex gap-6">
-                    <a class="text-[#60708a] hover:text-primary transition-colors" href="https://wa.me/51935533845"
-                        target="_blank" rel="noopener noreferrer">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"
-                            class="w-6 h-6">
-                    </a>
-                </div>
+            <div
+                class="absolute -bottom-10 -left-10 w-48 lg:w-64 rounded-3xl border-4 border-white shadow-2xl overflow-hidden bg-white hidden md:block">
+                <img class="w-full h-auto object-cover" data-alt="Mobile app interface for recording new expenses"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc8HmOzHAae_eFjz9iWE_te0I0ayWCpdkH5z-_rW-k5XMde4lfTsRwkO825SAlHmZIX4qSlJEfBJOEQVCjNmIPAl6vE8TwGB02vFi5lV-ZmVOOvkjCr6DqLOXNWgY8R5UjSF8K1WsvHqhAHM0HGUQlRuWQasbmG-Efi38qro7WTtYbgMz3C9cSSZQf2brijZ9xyS_cZo2lCvy0WLgXhttYy6VcbpLWIqvvBM754MG5gJd3XYr0vdJ8RMrRjdm8UNCplMsZHckydN8" />
             </div>
         </div>
-    </footer>
-</body>
+    </div>
+</section>
 
-</html>
+<!-- Value Proposition -->
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+        <div class="max-w-3xl mx-auto flex flex-col gap-6">
+            <h2 class="text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+                La Nueva Forma de Ver el Dinero. <span class="text-primary">Menos hojas de cálculo, más
+                    decisiones.</span>
+            </h2>
+            <p class="text-xl text-[#60708a] leading-relaxed">
+                Diseñado para quienes aman la flexibilidad de Excel pero odian el desorden visual. Zero es tu
+                capa de inteligencia sobre tus datos.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Features Grid -->
+<section class="py-24 bg-background-light" id="funciones">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div
+                class="bg-white p-8 rounded-2xl border border-[#e5e7eb] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
+                <div
+                    class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">visibility</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Claridad Mental Inmediata</h3>
+                <p class="text-[#60708a] leading-relaxed">Visualiza tus Ingresos, Gastos y Saldo en segundos.
+                    Sin fórmulas complejas ni errores de formato.</p>
+            </div>
+            <!-- Feature 2 -->
+            <div
+                class="bg-white p-8 rounded-2xl border border-[#e5e7eb] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
+                <div
+                    class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">payments</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Realidad Multimoneda</h3>
+                <p class="text-[#60708a] leading-relaxed">Separación automática de cuentas para diferentes
+                    divisas con tipos de cambio actualizados al instante.</p>
+            </div>
+            <!-- Feature 3 -->
+            <div
+                class="bg-white p-8 rounded-2xl border border-[#e5e7eb] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
+                <div
+                    class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">analytics</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Rentabilidad por Proyecto</h3>
+                <p class="text-[#60708a] leading-relaxed">Filtra por código de proyecto y ve la utilidad neta en
+                    tiempo real. Toma decisiones basadas en datos.</p>
+            </div>
+            <!-- Feature 4 -->
+            <div
+                class="bg-white p-8 rounded-2xl border border-[#e5e7eb] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
+                <div
+                    class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">database</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Tus Datos Son Tuyos</h3>
+                <p class="text-[#60708a] leading-relaxed">Todo vive en tu Google Sheet personal. Sin bloqueos de
+                    datos ni exportaciones tediosas. Privacidad total.</p>
+            </div>
+            <!-- Feature 5 -->
+            <div
+                class="bg-white p-8 rounded-2xl border border-[#e5e7eb] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
+                <div
+                    class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">bolt</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Registro Sin Fricción</h3>
+                <p class="text-[#60708a] leading-relaxed">Interfaz veloz optimizada para registrar gastos en
+                    menos de 5 segundos desde cualquier dispositivo.</p>
+            </div>
+            <!-- Special Card (CTA Placeholder) -->
+            <div class="bg-primary p-8 rounded-2xl flex flex-col justify-center items-center text-center text-white">
+                <span class="material-symbols-outlined text-4xl mb-4">rocket_launch</span>
+                <h3 class="text-xl font-bold mb-2">Más por venir</h3>
+                <p class="text-white/80 text-sm">Estamos construyendo el futuro de las finanzas personales.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bottom CTA -->
+<section class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-primary opacity-5"></div>
+    <div class="max-w-4xl mx-auto px-6 relative text-center">
+        <div class="flex flex-col gap-8 items-center">
+            <h2 class="text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+                ¿Listo para retomar el control?
+            </h2>
+            <p class="text-xl text-[#60708a] leading-relaxed">
+                Únete a la nueva era de las finanzas personales inteligentes. Configura tu cuenta en menos de 2
+                minutos.
+            </p>
+            <a href="{{ url_for('login') }}"
+                class="bg-primary text-white px-10 py-5 rounded-2xl font-bold text-xl hover:shadow-2xl hover:shadow-primary/50 transition-all hover:-translate-y-1 inline-block">
+                Iniciar Ahora
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
