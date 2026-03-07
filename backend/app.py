@@ -380,122 +380,132 @@ def add_transaction():
         
     return redirect(url_for('dashboard'))
 
+import pandas as pd
+import math
+import openpyxl
+from openpyxl.utils.cell import coordinate_from_string
+
 @app.route('/profit', methods=['GET', 'POST'])
 def profit_calculator():
     if 'user_id' not in session:
         return redirect(url_for('index'))
     
     user = db.session.get(User, session['user_id'])
-    if not user.webapp_url:
-        return redirect(url_for('setup'))
-
-    sheets = []
-    selected_sheet = None
+    
     analysis = None
     error = None
 
-    spreadsheet_url = None
-
-    # Helper to fetch sheets
-    try:
-        # Fetch sheet list
-        resp = requests.get(f"{user.webapp_url}?action=listSheets", timeout=10)
-        if resp.status_code == 200:
-            data = resp.json()
-            
-            all_sheets = []
-            if isinstance(data, list):
-                all_sheets = data
-                print("DEBUG: GAS response is a LIST. URL will be None.", flush=True)
-            elif isinstance(data, dict):
-                all_sheets = data.get('sheets', [])
-                spreadsheet_url = data.get('url')
-                print(f"DEBUG: GAS response is a DICT. URL: {spreadsheet_url}", flush=True)
-
-            # Filter main sheet if possible, or just list all
-            sheets = [s for s in all_sheets if s != 'Transacciones' and s != 'Config'] # Basic filtering
-        else:
-            print(f"DEBUG: Failed to list sheets. Status: {resp.status_code}", flush=True)
-            error = "Error al obtener lista de hojas."
-    except Exception as e:
-        error = f"Error de conexión: {str(e)}"
-
     if request.method == 'POST':
-        selected_sheet = request.form.get('sheet_name')
-        if selected_sheet:
-            try:
-                # Fetch data for specific sheet
-                resp = requests.get(f"{user.webapp_url}?sheet={selected_sheet}", timeout=10)
-                if resp.status_code == 200:
-                    data = resp.json()
-                    
-                    # Logic 
-                    # Data format: {'sli': 123.45, 'data': [{'Producto': '...', ...}, ...]}
-                    sli = float(data.get('sli', 0))
-                    items_raw = data.get('data', [])
-                    
-                    # Calculate Logic
-                    total_fob = 0
-                    processed_items = []
-                    
-                    # 1. First Pass: Calculate Total FOB
-                    # Validation: We expect columns like 'Total' or calculated from Qty * Unit
-                    # Let's assume headers are flexible but try to find 'Total' or use 'Cantidad'*'Precio Unitario'
-                    # Default keys based on user description: Producto, Cantidad, Precio Unitario, Total
-                    
-                    for row in items_raw:
-                        # Case insensitive key search helper
-                        def get_val(r, keys):
-                            for k in r.keys():
-                                if k.lower() in [x.lower() for x in keys]:
-                                    return r[k]
-                            return 0
+        if 'excel_file' not in request.files:
+            error = "No se subió ningún archivo."
+            return render_template('profit.html', user=user, analysis=None, error=error)
+            
+        file = request.files['excel_file']
+        if file.filename == '':
+            error = "No seleccionaste archivo."
+            return render_template('profit.html', user=user, analysis=None, error=error)
+            
+        if not (file.filename.endswith('.xlsx') or file.filename.endswith('.xls')):
+            error = "Formato inválido. Sube un archivo Excel."
+            return render_template('profit.html', user=user, analysis=None, error=error)
 
-                        qty = float(get_val(row, ['Cantidad', 'Qty', 'Cant', 'CANTIDAD']) or 0)
-                        unit_fob = float(get_val(row, ['Precio Unitario', 'Unit Price', 'FOB Unit', 'PRECIO_UNITARIO']) or 0)
-                        row_total = float(get_val(row, ['Total', 'Amount', 'PRECIO_TOTAL', 'TOTAL']) or (qty * unit_fob))
+        try:
+            # Get mapping config
+            sli = float(request.form.get('sli', 0))
+            col_name = request.form.get('col_name', '').strip()
+            col_qty = request.form.get('col_qty', '').strip()
+            col_unit_cost = request.form.get('col_unit_cost', '').strip()
+            col_total_cost = request.form.get('col_total_cost', '').strip()
+
+            # Function to split 'A2' into ('A', 2)
+            def parse_coord(coord_str):
+                try:
+                    col, row = coordinate_from_string(coord_str)
+                    return col, row
+                except:
+                    return None, None
+
+            n_col, n_row = parse_coord(col_name)
+            q_col, q_row = parse_coord(col_qty)
+            u_col, u_row = parse_coord(col_unit_cost)
+            t_col, t_row = parse_coord(col_total_cost)
+
+            if not all([n_col, q_col, u_col, t_col]):
+                 error = "Formato de coordenada inválida. Use formato como A2, B5."
+                 return render_template('profit.html', user=user, analysis=None, error=error)
+            
+            # Load workbook with openpyxl (data only so we get formula results)
+            wb = openpyxl.load_workbook(file, data_only=True)
+            ws = wb.active # Take the first/active sheet
+
+            total_fob = 0
+            processed_items = []
+            
+            # We assume the user gave us the starting row for the first product.
+            start_row = n_row
+            max_row = ws.max_row
+            
+            for r in range(start_row, max_row + 1):
+                try:
+                    name_val = ws[f"{n_col}{r}"].value
+                    qty_val = ws[f"{q_col}{r}"].value
+                    unit_val = ws[f"{u_col}{r}"].value
+                    total_val = ws[f"{t_col}{r}"].value
+                    
+                    # Stop parsing if all critical fields are empty
+                    if name_val is None and qty_val is None and unit_val is None:
+                        break
                         
-                        # Store flexible object
-                        if qty > 0 and unit_fob > 0:
-                            # Try to find name in PRODUCTO or Product
-                            prod_name = get_val(row, ['Producto', 'Product', 'PRODUCTO', 'Name', 'Item', 'Description'])
-                            if not prod_name:
-                                prod_name = list(row.values())[0] # Fallback to first col
+                    # Clean NaNs/None
+                    if qty_val is None or unit_val is None or total_val is None:
+                        continue
+                        
+                    qty = float(qty_val)
+                    unit_fob = float(unit_val)
+                    row_total = float(total_val)
+                    name = str(name_val).strip() if name_val else f"Item {r}"
 
-                            total_fob += row_total
-                            processed_items.append({
-                                'name': prod_name,
-                                'qty': qty,
-                                'unit_fob': unit_fob,
-                                'total_fob': row_total
-                            })
+                    if qty > 0 and unit_fob > 0:
+                        total_fob += row_total
+                        processed_items.append({
+                            'name': name,
+                            'qty': qty,
+                            'unit_fob': unit_fob,
+                            'total_fob': row_total
+                        })
+                except Exception as e:
+                    print(f"Skipping row {r} due to parse error: {e}")
+                    continue
 
-                    # 2. Calculate Factor
-                    factor = 0
-                    if total_fob > 0:
-                        factor = sli / total_fob
-                    
-                    # 3. Calculate Landed Cost
-                    final_items = []
-                    for item in processed_items:
-                        # Unit Landed = Unit FOB * (1 + Factor)
-                        unit_landed = item['unit_fob'] * (1 + factor)
-                        item['unit_landed'] = unit_landed
-                        final_items.append(item)
+            # Calculate Factor
+            factor = 0
+            if total_fob > 0:
+                factor = sli / total_fob
+            
+            # Calculate Landed Cost
+            final_items = []
+            for item in processed_items:
+                unit_landed = item['unit_fob'] * (1 + factor)
+                item['unit_landed'] = unit_landed
+                final_items.append(item)
 
-                    analysis = {
-                        'total_fob': total_fob,
-                        'sli': sli,
-                        'factor': factor,
-                        'products': final_items
-                    }
+            analysis = {
+                'total_fob': total_fob,
+                'sli': sli,
+                'factor': factor,
+                'products': final_items
+            }
 
-                else:
-                    error = "Error al obtener datos de la hoja."
-            except Exception as e:
-                error = f"Error calculando profit: {str(e)}"
+            return render_template('profit.html', user=user, analysis=analysis, error=None)
 
-    return render_template('profit.html', user=user, sheets=sheets, selected_sheet=selected_sheet, analysis=analysis, error=error, spreadsheet_url=spreadsheet_url)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            error = f"Error procesando el Excel: {str(e)}"
+            return render_template('profit.html', user=user, analysis=None, error=error)
+
+    # GET request
+    return render_template('profit.html', user=user, analysis=None, error=None)
 
 @app.route('/utilities')
 def utilities():

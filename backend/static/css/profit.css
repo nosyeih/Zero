@@ -1,0 +1,109 @@
+/* Prevent body/main scrolling on this specific page */
+body,
+main {
+    overflow: hidden !important;
+}
+
+/* Keep the flex container strictly bounded */
+.profit-container {
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+}
+
+@media print {
+    @page {
+        size: landscape;
+        margin: 10mm;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    body,
+    main {
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+        display: block !important;
+    }
+
+    .max-w-7xl,
+    .max-w-7xl * {
+        visibility: visible;
+    }
+
+    .max-w-7xl {
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    nav,
+    form,
+    button,
+    .print\:hidden {
+        display: none !important;
+    }
+
+    .print\:bg-white {
+        background-color: white !important;
+    }
+
+    .print\:bg-gray-100 {
+        background-color: #f3f4f6 !important;
+    }
+
+    .print\:shadow-none {
+        box-shadow: none !important;
+    }
+
+    /* Prevent table and scroll container from cutting off */
+    .overflow-x-auto {
+        overflow: visible !important;
+    }
+
+    table {
+        width: 100% !important;
+        max-width: 100% !important;
+        page-break-inside: auto;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    td,
+    th {
+        white-space: normal !important;
+        word-wrap: break-word;
+        padding: 8px 4px !important;
+        /* reduce padding to fit more */
+        font-size: 0.75rem !important;
+        /* text-xs equivalent for better fit */
+    }
+
+    /* Clean up inputs for printing */
+    input[type="number"] {
+        appearance: textfield;
+        -moz-appearance: textfield;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        text-align: right;
+        font-size: 0.75rem !important;
+        width: 100% !important;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        appearance: none;
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}

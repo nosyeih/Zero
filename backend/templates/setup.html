@@ -155,13 +155,5 @@ function doGet(e) {
     </div>
 </div>
 
-<script>
-    function copyCode() {
-        var copyText = document.getElementById("scriptCode");
-        copyText.select();
-        copyText.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(copyText.value);
-        alert("Código copiado al portapapeles");
-    }
-</script>
+<script src="{{ url_for('static', filename='js/setup.js') }}"></script>
 {% endblock %}

@@ -6,19 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zero</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4F46E5', // Indigo 600
-                        secondary: '#10B981', // Emerald 500
-                        dark: '#1F2937', // Gray 800
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/tailwind-config-app.js') }}"></script>
     <!-- Favicon & PWA -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon-96x96.png') }}"
         sizes="96x96" />
@@ -28,18 +16,7 @@
         href="{{ url_for('static', filename='images/apple-touch-icon.png') }}" />
     <meta name="apple-mobile-web-app-title" content="FinanzaApp" />
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}" />
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
 </head>
 
 <body
@@ -132,7 +109,7 @@
     </nav>
 
     <!-- Main Content Area: Flex-grow to fill space, scrollable if needed -->
-    <main class="flex-1 overflow-y-auto bg-gray-50 relative scroll-smooth focus:scroll-auto">
+    <main class="flex-1 overflow-y-auto bg-gray-50 relative scroll-smooth focus:scroll-auto flex flex-col">
         <!-- Background decoration -->
         <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
             <div
@@ -146,7 +123,7 @@
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col">
+        <div class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col">
             {% block content %}{% endblock %}
         </div>
 
@@ -167,7 +144,7 @@
                         <a href="{{ url_for('dashboard') }}"
                             class="text-gray-500 hover:text-indigo-600 transition-colors">Inicio</a>
                         <a href="{{ url_for('operations') }}"
-                            class="text-gray-500 hover:text-indigo-600 transition-colors">Operaciones</a>
+                            class="text-gray-500 hover:text-indigo-600 transition-colors">Finanzas</a>
                         <a href="{{ url_for('profit_calculator') }}"
                             class="text-gray-500 hover:text-indigo-600 transition-colors">Rentabilidad</a>
                         <a href="{{ url_for('utilities') }}"
@@ -193,38 +170,6 @@
         </footer>
         {% endblock %}
     </main>
-
-    <style>
-        @keyframes blob {
-            0% {
-                transform: translate(0px, 0px) scale(1);
-            }
-
-            33% {
-                transform: translate(30px, -50px) scale(1.1);
-            }
-
-            66% {
-                transform: translate(-20px, 20px) scale(0.9);
-            }
-
-            100% {
-                transform: translate(0px, 0px) scale(1);
-            }
-        }
-
-        .animate-blob {
-            animation: blob 7s infinite;
-        }
-
-        .animation-delay-2000 {
-            animation-delay: 2s;
-        }
-
-        .animation-delay-4000 {
-            animation-delay: 4s;
-        }
-    </style>
 </body>
 
 </html>
